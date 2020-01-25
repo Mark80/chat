@@ -1,0 +1,12 @@
+*.class
+*.log*
+*.DS_Store
+.cache
+.env
+.idea
+.lib
+dist/*
+target
+logs/*
+.sbtopts
+environment.yaml
