@@ -1,2 +1,4 @@
 # chat
-simple chat service
+Simple chat service
+
+Run sbt run to start the server
