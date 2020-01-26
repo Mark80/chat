@@ -16,4 +16,10 @@ class ClientRepository {
   def getAll =
     clients.toList
 
+  def remove(id: String): Unit = clients.synchronized {
+    val index = clients.map(_.id).indexOf(id)
+    clients.remove(index)
+    println(s"Removed client with id $id")
+  }
+
 }

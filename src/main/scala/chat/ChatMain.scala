@@ -8,22 +8,28 @@ object ChatMain {
 
     val server = new ChatServer(8080)
 
+    new Thread() {
+      override def run(): Unit =
+        server.start()
+    }.start()
+
     val latch = new CountDownLatch(1)
 
-    server.start()
-
-    Runtime
-      .getRuntime()
+    Runtime.getRuntime
       .addShutdownHook(
         new Thread() {
           override def run(): Unit = {
-            println("shutdown ....")
+            println("shutdown init  ....")
             server.stop()
+            println("shutdown finish  ....")
+            latch.countDown()
           }
         }
       )
 
     latch.await()
+
+    println("Bye Bye ....")
 
   }
 

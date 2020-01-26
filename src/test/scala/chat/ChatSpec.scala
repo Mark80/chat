@@ -4,7 +4,7 @@ import java.io.{BufferedReader, InputStreamReader}
 import java.net.{InetSocketAddress, Socket}
 import org.scalatest.{BeforeAndAfterEach, Matchers, WordSpec}
 
-class ChatSpec extends WordSpec with Matchers with BeforeAndAfterEach  {
+class ChatSpec extends WordSpec with Matchers with BeforeAndAfterEach {
 
   "ChatServer" should {
 
@@ -22,6 +22,8 @@ class ChatSpec extends WordSpec with Matchers with BeforeAndAfterEach  {
       val client3 = new Socket
       client3.connect(new InetSocketAddress("localhost", 8080))
 
+      waitForOneSecond()
+
       val buf2 = bufferReader(client2)
       val buf3 = bufferReader(client3)
 
@@ -29,13 +31,19 @@ class ChatSpec extends WordSpec with Matchers with BeforeAndAfterEach  {
       out.write("pippo\n".getBytes)
 
       buf2.readLine() shouldBe "pippo"
+
       buf3.readLine() shouldBe "pippo"
+
+      println(">>>>>>>>>>>>>>")
 
       chat.stop()
 
     }
 
   }
+
+  private def waitForOneSecond(): Unit =
+    Thread.sleep(1000)
 
   private def bufferReader(client: Socket) =
     new BufferedReader(new InputStreamReader(client.getInputStream))

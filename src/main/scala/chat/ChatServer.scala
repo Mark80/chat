@@ -22,8 +22,8 @@ class ChatServer(port: Int) {
           clientRepository.add(newClient)
           new ClientHandler(newClient, clientRepository).start()
 
-        case Failure(_) =>
-          stop()
+        case Failure(ex) =>
+          println(s"error ${ex.getCause}")
       }
     }
 
@@ -32,7 +32,6 @@ class ChatServer(port: Int) {
   def stop(): Unit = {
     clientRepository.getAll.foreach(_.close())
     controller.set(false)
-    println("STOP")
     server.close()
   }
 

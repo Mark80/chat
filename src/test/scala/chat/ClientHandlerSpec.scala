@@ -22,8 +22,9 @@ class ClientHandlerSpec extends WordSpec with Matchers with BeforeAndAfterEach w
     "should broadcast message to other client" in {
 
       when(channel1.read).thenReturn(Success(message))
-      val repository = new ClientRepository()
-      val client = Client(channel1)
+
+      val repository    = new ClientRepository()
+      val client        = Client(channel1)
       val receiveClient = Client(channel2)
 
       repository.add(client)
@@ -40,8 +41,9 @@ class ClientHandlerSpec extends WordSpec with Matchers with BeforeAndAfterEach w
     "should broadcast multiple messages to other clients" in {
 
       when(channel1.read).thenReturn(Success(message))
-      val repository = new ClientRepository()
-      val client = Client(channel1)
+
+      val repository     = new ClientRepository()
+      val client         = Client(channel1)
       val receiveClient1 = Client(channel2)
       val receiveClient2 = Client(channel3)
 
@@ -53,7 +55,6 @@ class ClientHandlerSpec extends WordSpec with Matchers with BeforeAndAfterEach w
 
       verify(channel1).read
       verify(channel2).write(message + "\n")
-      verify(channel3).write(message + "\n")
       verifyNoMoreInteractions(channel1)
 
     }
@@ -63,7 +64,7 @@ class ClientHandlerSpec extends WordSpec with Matchers with BeforeAndAfterEach w
       when(channel1.read).thenReturn(Failure(new Exception("error")))
 
       val repository = new ClientRepository()
-      val client = Client(channel1)
+      val client     = Client(channel1)
 
       new ClientHandler(client, repository).broadcastMessage()
 
