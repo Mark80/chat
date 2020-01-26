@@ -4,7 +4,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 import scala.util.Try
 
-class ClientHandler(client: Client, repository: ClientRepository) extends Thread {
+class ChatClientProxy(client: Client, repository: ClientRepository) extends Thread {
 
   private val controller = new AtomicBoolean(true)
 

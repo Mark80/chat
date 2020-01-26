@@ -20,7 +20,7 @@ class ChatServer(port: Int) {
           val newClient = Client(channel)
           println(s"Added client ${newClient.id}")
           clientRepository.add(newClient)
-          new ClientHandler(newClient, clientRepository).start()
+          new ChatClientProxy(newClient, clientRepository).start()
 
         case Failure(ex) =>
           println(s"error ${ex.getCause}")
