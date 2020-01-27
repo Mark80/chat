@@ -6,11 +6,14 @@ import org.scalatest.{BeforeAndAfterEach, Matchers, WordSpec}
 
 class ClientSpec extends WordSpec with Matchers with BeforeAndAfterEach {
 
+  private var server: ServerSocket = _
+
+  override def beforeEach(): Unit =
+    server = new ServerSocket(8080)
+
   "Client" should {
 
     "write on channel" in {
-
-      val server = new ServerSocket(8080)
 
       val telnetSocket = new Socket("localhost", 8080)
 
@@ -18,7 +21,7 @@ class ClientSpec extends WordSpec with Matchers with BeforeAndAfterEach {
 
       val client = Client(new SocketChannel(serverSocket))
 
-      val bufferedReader = new BufferedReader(new InputStreamReader(telnetSocket.getInputStream))
+      val bufferedReader = readFrom(telnetSocket)
 
       client.write("message\n")
 
@@ -26,14 +29,11 @@ class ClientSpec extends WordSpec with Matchers with BeforeAndAfterEach {
 
       msg shouldBe "message"
 
-      server.close()
       client.close()
-      bufferedReader.close()
+      telnetSocket.close()
     }
 
     "read on channel" in {
-
-      val server = new ServerSocket(8080)
 
       val telnetSocket = new Socket("localhost", 8080)
 
@@ -47,10 +47,29 @@ class ClientSpec extends WordSpec with Matchers with BeforeAndAfterEach {
 
       msg.get shouldBe "message"
 
-      server.close()
       client.close()
+      telnetSocket.close()
+    }
+
+    "close channel" in {
+
+      new Socket("localhost", 8080)
+
+      val clientSocket: Socket = server.accept()
+
+      val channel = new SocketChannel(clientSocket)
+      val client  = Client(channel)
+
+      client.close()
+      clientSocket.isClosed shouldBe true
     }
 
   }
+
+  private def readFrom(telnetSocket: Socket) =
+    new BufferedReader(new InputStreamReader(telnetSocket.getInputStream))
+
+  override def afterEach(): Unit =
+    server.close()
 
 }

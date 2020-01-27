@@ -72,6 +72,23 @@ class ChatClientProxySpec extends WordSpec with Matchers with BeforeAndAfterEach
 
     }
 
+    "close channel and remove client from repository if the client is dead" in {
+
+      val deadSignal = Success(null)
+
+      when(channel1.read).thenReturn(deadSignal)
+
+      val repository = new ClientRepository()
+      val client     = Client(channel1)
+      repository.add(client)
+
+      new ChatClientProxy(client, repository).broadcastMessage()
+
+      repository.getAll shouldBe empty
+      verify(channel1).close()
+
+    }
+
   }
 
 }

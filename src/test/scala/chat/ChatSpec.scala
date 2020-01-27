@@ -34,8 +34,6 @@ class ChatSpec extends WordSpec with Matchers with BeforeAndAfterEach {
 
       buf3.readLine() shouldBe "pippo"
 
-      println(">>>>>>>>>>>>>>")
-
       chat.stop()
 
     }
